@@ -7,11 +7,11 @@ router.post('/add-product', admin.postAddProduct);
 
 // router.get('/delete-product/:id', admin.getDeleteProduct)
 
-// router.get('/edit-product/:id', admin.getEditProduct)
-// router.post('/edit-product/:id', admin.postEditProduct)
+router.get('/edit-product/:id', admin.getEditProduct)
+router.post('/edit-product/:id', admin.postEditProduct)
 
 
-// router.get('/products', admin.fetchAll)
+router.get('/products', admin.fetchAll)
 
 
 
