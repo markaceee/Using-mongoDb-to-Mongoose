@@ -2,19 +2,19 @@ const Product = require('../models/products')
 const mongodb = require('mongodb')
 const ObjectId = mongodb.ObjectId
 
-// exports.fetchAll = (req, res, next) => {
-//     Product.fetchAll()
-//         .then(products => {
-//             res.render("admin/products", {
-//                 pageTitle: 'Products',
-//                 path: '/admin/products',
-//                 prods: products
-//             })
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// }
+exports.fetchAll = (req, res, next) => {
+    Product.find()
+        .then(products => {
+            res.render("admin/products", {
+                pageTitle: 'Products',
+                path: '/admin/products',
+                prods: products
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
@@ -45,38 +45,44 @@ exports.postAddProduct = (req, res, next) => {
     
 }
 
-// exports.getEditProduct = (req, res, next) => {
-//     const editMode = req.query.edit
-//     const productID = req.params.id
-//     if (!editMode) {
-//         return res.redirect('/')
-//     }
+exports.getEditProduct = (req, res, next) => {
+    const editMode = req.query.edit
+    const productID = req.params.id
+    if (!editMode) {
+        return res.redirect('/')
+    }
 
-//     Product.findById(productID)
-//         .then(product => {
-//             res.render('admin/edit-product', {
-//                 pageTitle: 'Edit product',
-//                 path: "/admin/edit-product",
-//                 editing: editMode,
-//                 product: product
-//             })
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// }
+    Product.findById(productID)
+        .then(product => {
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit product',
+                path: "/admin/edit-product",
+                editing: editMode,
+                product: product
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
 
-// exports.postEditProduct = (req, res, next) => {
-//     const { title, price, imageUrl, description } = req.body
-//     const id = req.params.id
-//     const product = new Product(title, price, imageUrl, description, id)
-//     product
-//         .save()
-//         .then(result => {
-//             res.redirect("/admin/products")
-//         })
-//         .catch(err => console.log(err))
-// }
+exports.postEditProduct = (req, res, next) => {
+    const { title, price, imageUrl, description } = req.body
+    const id = req.params.id
+
+    Product.findById(id)
+        .then(product => {
+            product.title = title;
+            product.price = price;
+            product.imageUrl = imageUrl;
+            product.description = description;
+            return product.save()
+        })
+        .then(result => {
+            res.redirect("/admin/products")
+        })
+        .catch(err => console.log(err))
+}
 
 // exports.getDeleteProduct = (req, res, next) => {
 //     let deleteProductById = req.params.id
@@ -85,5 +91,4 @@ exports.postAddProduct = (req, res, next) => {
 //             res.redirect("/admin/products")
 //         })
 //         .catch(err => console.log(err))
-   
 // }
