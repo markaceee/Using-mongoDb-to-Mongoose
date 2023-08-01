@@ -16,16 +16,16 @@ app.set('view engine', 'ejs')
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.urlencoded({extended: false}))
 
-// app.use((req, res, next) => {
-//    User.findById('64c4ff2e2097a553383ea6eb')
-//       .then(user => {
-//          req.user = new User(user.name, user.email, user.cart, user._id)
-//          next()
-//       })
-//       .catch(err => {
-//          console.log(err)
-//       })
-// })
+
+app.use((req, res, next) => {
+   User.findById('64c78375264e83b984af4a4a')
+      .then(user => {
+         req.user = user;
+         next();
+      })
+      .catch(err => console.log(err))
+})
+
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
@@ -34,6 +34,20 @@ app.use(error.errorPage)
 
 mongoose.connect(process.env.MONGODB)
    .then(result => {
+      User.findOne()
+         .then(user => {
+            if(!user){
+               const user = new User({
+                  name: "Mark",
+                  email: 'test@gnail.com',
+                  cart: {
+                     items: []
+                  }
+               })
+               user.save();
+            }
+         })
+
       app.listen(process.env.PORT, () => {
          console.log('Listening to port ' + process.env.PORT)
       })

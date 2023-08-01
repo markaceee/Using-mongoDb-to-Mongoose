@@ -4,6 +4,8 @@ const ObjectId = mongodb.ObjectId
 
 exports.fetchAll = (req, res, next) => {
     Product.find()
+        // .select('title price -_id') select custom rows
+        // .populate('userId', 'name') its like joining two collections
         .then(products => {
             res.render("admin/products", {
                 pageTitle: 'Products',
@@ -30,7 +32,8 @@ exports.postAddProduct = (req, res, next) => {
         title: title, 
         price: price, 
         imageUrl: imageUrl,
-        description: description
+        description: description,
+        userId: req.user
     })
     
     newProduct
@@ -84,11 +87,11 @@ exports.postEditProduct = (req, res, next) => {
         .catch(err => console.log(err))
 }
 
-// exports.getDeleteProduct = (req, res, next) => {
-//     let deleteProductById = req.params.id
-//     Product.deleteById(deleteProductById)
-//         .then(result => {
-//             res.redirect("/admin/products")
-//         })
-//         .catch(err => console.log(err))
-// }
+exports.getDeleteProduct = (req, res, next) => {
+    let deleteProductById = req.params.id
+    Product.findByIdAndRemove(deleteProductById)
+        .then(result => {
+            res.redirect("/admin/products")
+        })
+        .catch(err => console.log(err))
+}
