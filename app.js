@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 
 const adminRoutes = require('./server/routes/admin')
 const shopRoutes = require('./server/routes/shop')
+const authRoutes = require('./server/routes/auth')
 const error = require('./server/controllers/error');
 const User = require('./server/models/user')
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
+app.use(authRoutes)
 
 app.use(error.errorPage)
 
